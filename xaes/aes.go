@@ -4,7 +4,8 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	"errors"
-	"xcrypto/padding"
+
+	"gitee.com/yctxkj/xcrypto/padding"
 )
 
 func EncryptECB_Pad(plain, key []byte) ([]byte, error) {
