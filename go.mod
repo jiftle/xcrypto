@@ -1,4 +1,4 @@
-module xcrypto
+module gitee.com/yctxkj/xcrypto
 
 go 1.17
 
