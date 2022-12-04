@@ -5,11 +5,11 @@ import (
 	"crypto/cipher"
 	"errors"
 
-	"gitee.com/yctxkj/xcrypto/padding"
+	"gitee.com/yctxkj/xcrypto/xpadding"
 )
 
 func EncryptECB_Pad(plain, key []byte) ([]byte, error) {
-	bytPlain := padding.Padding_ISO7816_4(plain, 16)
+	bytPlain := xpadding.Padding_ISO7816_4(plain, 16)
 	bytCipher, err := Encrypt_ECB(bytPlain, key)
 	if err != nil {
 		return nil, err
@@ -22,7 +22,7 @@ func DecryptECB_Pad(plain, key []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytCipherNoPad := padding.UnPadding_ISO7816_4(bytCipher, 16)
+	bytCipherNoPad := xpadding.UnPadding_ISO7816_4(bytCipher, 16)
 	return bytCipherNoPad, err
 }
 
@@ -80,7 +80,7 @@ func AES_Encrypt_CBC(plantText, key []byte, iv []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	plantText = padding.Padding_ISO7816_4(plantText, block.BlockSize())
+	plantText = xpadding.Padding_ISO7816_4(plantText, block.BlockSize())
 
 	blockModel := cipher.NewCBCEncrypter(block, iv)
 
@@ -104,6 +104,6 @@ func AES_Decrypt_CBC(ciphertext, key []byte, iv []byte) ([]byte, error) {
 	blockModel := cipher.NewCBCDecrypter(block, iv)
 	plantText := make([]byte, len(ciphertext))
 	blockModel.CryptBlocks(plantText, ciphertext)
-	plantText = padding.UnPadding_ISO7816_4(plantText, block.BlockSize())
+	plantText = xpadding.UnPadding_ISO7816_4(plantText, block.BlockSize())
 	return plantText, nil
 }
