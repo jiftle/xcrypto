@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"strconv"
+	"strings"
 
 	"github.com/tjfoc/gmsm/sm4"
 )
@@ -27,6 +28,7 @@ func PbocMac(data, key, iv string) (out string, err error) {
 		return
 	}
 	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
 	return
 }
 
@@ -44,6 +46,7 @@ func DiversifyKey(key, dvs string) (newkey string, err error) {
 		return
 	}
 	newkey = hex.EncodeToString(nk)
+	newkey = strings.ToUpper(newkey)
 	return
 }
 
@@ -65,6 +68,7 @@ func Decrypt_CBC(data, key, iv string) (out string, err error) {
 		return
 	}
 	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
 	return
 }
 
@@ -97,6 +101,7 @@ func Encrypt_CBC(data, key, iv string) (out string, err error) {
 		return
 	}
 	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
 	return
 }
 
@@ -129,6 +134,7 @@ func Encrypt_ECB(data, key string) (out string, err error) {
 		return
 	}
 	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
 	return
 }
 
@@ -146,6 +152,7 @@ func Decrypt_ECB(data, key string) (out string, err error) {
 		return
 	}
 	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
 	return
 }
 
