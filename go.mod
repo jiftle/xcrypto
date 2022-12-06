@@ -2,4 +2,12 @@ module gitee.com/yctxkj/xcrypto
 
 go 1.19
 
-require github.com/tjfoc/gmsm v1.4.1
+require (
+	github.com/tjfoc/gmsm v1.4.1
+	golang.org/x/text v0.3.3
+)
+
+require (
+	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
+	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
+)

@@ -1,6 +1,11 @@
 package xpadding
 
-import "bytes"
+import (
+	"bytes"
+	"encoding/hex"
+	"errors"
+	"strings"
+)
 
 func Padding_PKCS5(ciphertext []byte, blockSize int) []byte {
 	padding := blockSize - len(ciphertext)%blockSize
@@ -31,4 +36,41 @@ func UnPadding_ISO7816_4(plain []byte, blockSize int) []byte {
 	lastIndex := bytes.LastIndex(plain, []byte{0x80})
 	newPadText = plain[:lastIndex]
 	return newPadText
+}
+
+func Padding_Pboc(data string, blocksize int) (out string, err error) {
+	bytData, err := hex.DecodeString(data)
+	if err != nil {
+		return
+	}
+	bytOut := Padding_ISO7816_4(bytData, blocksize)
+	if err != nil {
+		return
+	}
+	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
+	return
+}
+
+func Padding_Pkcs7(src []byte, blockSize int) []byte {
+	padding := blockSize - len(src)%blockSize
+	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(src, padtext...)
+}
+
+func UnPadding_Pkcs7(src []byte, blockSize int) ([]byte, error) {
+	length := len(src)
+	unpadding := int(src[length-1])
+	if unpadding > blockSize || unpadding == 0 {
+		return nil, errors.New("invalid pkcs7 padding (unpadding > BlockSize || unpadding == 0)")
+	}
+
+	pad := src[len(src)-unpadding:]
+	for i := 0; i < unpadding; i++ {
+		if pad[i] != byte(unpadding) {
+			return nil, errors.New("invalid pkcs7 padding (pad[i] != unpadding)")
+		}
+	}
+
+	return src[:(length - unpadding)], nil
 }
