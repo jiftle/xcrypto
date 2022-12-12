@@ -3,7 +3,9 @@ package xaes
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"encoding/hex"
 	"errors"
+	"strings"
 
 	"gitee.com/yctxkj/xcrypto/xpadding"
 )
@@ -73,9 +75,45 @@ func Decrypt_ECB(bytCipher, key []byte) ([]byte, error) {
 	return bytPlain, nil
 }
 
+func AES_Decrypt_ECB(data, key string) (out string, err error) {
+	bytData, err := hex.DecodeString(data)
+	if err != nil {
+		return
+	}
+	bytKey, err := hex.DecodeString(key)
+	if err != nil {
+		return
+	}
+	bytOut, err := Decrypt_ECB(bytData, bytKey)
+	if err != nil {
+		return
+	}
+	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
+	return
+}
+
+func AES_Encrypt_ECB(data, key string) (out string, err error) {
+	bytData, err := hex.DecodeString(data)
+	if err != nil {
+		return
+	}
+	bytKey, err := hex.DecodeString(key)
+	if err != nil {
+		return
+	}
+	bytOut, err := Encrypt_ECB(bytData, bytKey)
+	if err != nil {
+		return
+	}
+	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
+	return
+}
+
 // ================== CBC ========================
 
-func AES_Encrypt_CBC(plantText, key []byte, iv []byte) ([]byte, error) {
+func Encrypt_CBC(plantText, key []byte, iv []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -88,6 +126,28 @@ func AES_Encrypt_CBC(plantText, key []byte, iv []byte) ([]byte, error) {
 
 	blockModel.CryptBlocks(ciphertext, plantText)
 	return ciphertext, nil
+}
+
+func AES_Encrypt_CBC(data, key, iv string) (out string, err error) {
+	bytData, err := hex.DecodeString(data)
+	if err != nil {
+		return
+	}
+	bytKey, err := hex.DecodeString(key)
+	if err != nil {
+		return
+	}
+	bytIv, err := hex.DecodeString(iv)
+	if err != nil {
+		return
+	}
+	bytOut, err := Encrypt_CBC(bytData, bytKey, bytIv)
+	if err != nil {
+		return
+	}
+	out = hex.EncodeToString(bytOut)
+	out = strings.ToUpper(out)
+	return
 }
 
 func AES_Decrypt_CBC(ciphertext, key []byte, iv []byte) ([]byte, error) {
