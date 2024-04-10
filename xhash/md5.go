@@ -3,7 +3,7 @@ package algorithm
 import (
 	"crypto/md5"
 
-	"gitee.com/yctxkj/xcrypto/utility"
+	"github.com/jiftle/xcrypto/utility"
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
 )

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"strings"
 
-	"gitee.com/yctxkj/xcrypto/xpadding"
+	"github.com/jiftle/xcrypto/xpadding"
 )
 
 func EncryptECB_Pad(plain, key []byte) ([]byte, error) {

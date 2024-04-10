@@ -9,13 +9,10 @@ import (
 )
 
 const (
-	// DECRYPT 解密模式
 	DECRYPT = 0
-	// ENCRYPT 加密模式
 	ENCRYPT = 1
 )
 
-// Sm4BlockSize size of GM_SM4 block
 const Sm4BlockSize = 16
 
 var sm4sbox = [256]byte{

@@ -1,4 +1,4 @@
-package algorithm
+package xdes
 
 import (
 	"crypto/des"
@@ -7,15 +7,11 @@ import (
 )
 
 const (
-	// DECRYPT 解密模式
-	DECRYPT = 0
-	// ENCRYPT 加密模式
-	ENCRYPT = 1
+	CNT_MODE_DECRYPT = 0
+	CNT_MODE_ENCRYPT = 1
 )
 
-// DESECB single des for ecb mode
-// flag	0：解密，1：加密
-func DESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
+func DesEcb(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 	key := make([]byte, 8)
 	if len(keyValue) >= 8 {
 		copy(key, keyValue[:8])
@@ -37,7 +33,7 @@ func DESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 	out := make([]byte, len(txtValue))
 	dst := out
 	for len(data) > 0 {
-		if flag == ENCRYPT {
+		if flag == CNT_MODE_ENCRYPT {
 			block.Encrypt(dst, data[:blockSize])
 		} else {
 			block.Decrypt(dst, data[:blockSize])
@@ -49,9 +45,7 @@ func DESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 	return out, nil
 }
 
-// TripleDESECB triple des for ecb mode
-// flag	0：解密，1：加密
-func TripleDESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
+func TripleDesEcb(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 	key := make([]byte, 24)
 	if len(keyValue) > 24 {
 		copy(key, keyValue[:24])
@@ -59,11 +53,11 @@ func TripleDESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 		copy(key, keyValue[:16])
 		copy(key[16:], keyValue[:8])
 	} else {
-		err := errors.New("key length must be greater than 16")
+		err := errors.New("key must be greater than 16")
 		return nil, err
 	}
 	if len(txtValue)%8 != 0 {
-		err := errors.New("input length not multiple of 8 bytes")
+		err := errors.New("input not multiple of 8 bytes")
 		return nil, err
 	}
 	block, err := des.NewTripleDESCipher(key)
@@ -76,7 +70,7 @@ func TripleDESECB(keyValue []byte, txtValue []byte, flag int) ([]byte, error) {
 	out := make([]byte, len(txtValue))
 	dst := out
 	for len(data) > 0 {
-		if flag == ENCRYPT {
+		if flag == CNT_MODE_ENCRYPT {
 			block.Encrypt(dst, data[:blockSize])
 		} else {
 			block.Decrypt(dst, data[:blockSize])
@@ -95,15 +89,14 @@ func GetSubKeyDES(ckKey []byte, dvsData []byte) ([]byte, error) {
 	for i := 0; i < 8; i++ {
 		subData[8+i] = ^dvsData[i]
 	}
-	out, err := TripleDESECB(ckKey, subData, ENCRYPT)
+	out, err := TripleDesEcb(ckKey, subData, CNT_MODE_ENCRYPT)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// CalcPBOCMacDES pboc mac 3des
-func CalcPBOCMacDES(key []byte, iv []byte, data []byte, macLen int) ([]byte, error) {
+func PbocMac(key []byte, iv []byte, data []byte, macLen int) ([]byte, error) {
 	if macLen > 8 || macLen < 0 {
 		return nil, errors.New("invalid mac length " + strconv.Itoa(macLen))
 	}
@@ -129,17 +122,17 @@ func CalcPBOCMacDES(key []byte, iv []byte, data []byte, macLen int) ([]byte, err
 		for j := 0; j < 8; j++ {
 			blockData[j] = tmpMacData[j] ^ ivData[j]
 		}
-		ivData, err = DESECB(key[:8], blockData, ENCRYPT)
+		ivData, err = DesEcb(key[:8], blockData, CNT_MODE_ENCRYPT)
 		if err != nil {
 			return nil, err
 		}
 		tmpMacData = tmpMacData[8:]
 	}
-	blockData, err = DESECB(key[8:], ivData, DECRYPT)
+	blockData, err = DesEcb(key[8:], ivData, CNT_MODE_DECRYPT)
 	if err != nil {
 		return nil, err
 	}
-	ivData, err = DESECB(key[:8], blockData, ENCRYPT)
+	ivData, err = DesEcb(key[:8], blockData, CNT_MODE_ENCRYPT)
 	if err != nil {
 		return nil, err
 	}

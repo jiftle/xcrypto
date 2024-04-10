@@ -5,7 +5,7 @@ import (
 	"errors"
 	"math/big"
 
-	"gitee.com/yctxkj/xcrypto/utility"
+	"github.com/jiftle/xcrypto/utility"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 )

@@ -4,13 +4,12 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 
-	// "github.com/gogf/gf/v2/frame/g"
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/x509"
 )
 
 func SM2_GenerateKeyPair() (publicKey string, privateKey string, err error) {
-	privKey, err := sm2.GenerateKey(nil) // 生成密钥对
+	privKey, err := sm2.GenerateKey(nil)
 	if err != nil {
 		return
 	}
@@ -37,7 +36,6 @@ func SM2_PublicKey_Encrypt(plain string, publicKey string) (cipher string, err e
 }
 
 func SM2_PrivateKey_Decrypt(cipher string, privKey string) (plain string, err error) {
-	// g.Log().Infof(context.TODO(), "cipher=%v, privKey=%v", cipher, privKey)
 	priv, err := x509.ReadPrivateKeyFromHex(privKey)
 	if err != nil {
 		return
@@ -51,6 +49,5 @@ func SM2_PrivateKey_Decrypt(cipher string, privKey string) (plain string, err er
 		return
 	}
 	plain = hex.EncodeToString(d)
-	// g.Log().Infof(context.TODO(), "cipher=%v, privKey=%v, plain=%v", cipher, privKey, plain)
 	return
 }
