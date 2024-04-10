@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"gitee.com/yctxkj/xcrypto/xaes"
+	"github.com/jiftle/xcrypto/xaes"
 )
 
 func main() {
