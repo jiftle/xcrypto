@@ -1,13 +1,13 @@
-module gitee.com/yctxkj/xcrypto
+module github.com/jiftle/xcrypto
 
-go 1.19
+go 1.20
 
 require (
 	github.com/tjfoc/gmsm v1.4.1
-	golang.org/x/text v0.3.3
+	golang.org/x/text v0.14.0
 )
 
 require (
 	golang.org/x/crypto v0.0.0-20201012173705-84dcc777aaee // indirect
-	golang.org/x/sys v0.0.0-20200930185726-fdedc70b468f // indirect
+	golang.org/x/sys v0.5.0 // indirect
 )

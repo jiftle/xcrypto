@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"gitee.com/yctxkj/xcrypto/utility"
+	"github.com/jiftle/xcrypto/utility"
 )
 
 // GetRandString 获取随机数字符串（字符长度）
