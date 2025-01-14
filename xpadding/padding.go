@@ -19,9 +19,6 @@ func UnPadding_PKCS5(origData []byte) []byte {
 	return origData[:(length - unpadding)]
 }
 
-// 模式2（IEC 9797-1填充，或 PBOC2.0填充）：
-//
-//	以0x80和0x00构成的字节序列填充,0x80只出现在最前面,仅仅只出现且一次必须出现,剩下的字节以0x00填充.
 func Padding_ISO7816_4(ciphertext []byte, blockSize int) []byte {
 	var newPadText []byte
 	padding := blockSize - len(ciphertext)%blockSize - 1

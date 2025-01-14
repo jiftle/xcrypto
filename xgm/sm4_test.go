@@ -38,6 +38,41 @@ func Test_SM4CryptEcb(t *testing.T) {
 // SM4CryptEcb SM4加解密CBC
 // flag	0：解密，1：加密
 func Test_SM4CryptCbc(t *testing.T) {
+	bytKey := []byte("DONGRUANDONGRUAN")
+	bytData := []byte("{\"idserial\":\"123456\"}")
+	bytIv := []byte("NEWCAPECNEWCAPEC")
+
+	t.Logf("key: %s", hex.EncodeToString(bytKey))
+	t.Logf("iv: %s", hex.EncodeToString(bytIv))
+
+	bytNewData := append(bytData, 0x80)
+	mod := len(bytNewData) % 16
+	if mod != 0 {
+		bytPad := make([]byte, 16-mod)
+		bytNewData = append(bytNewData, bytPad...)
+	}
+
+	bytOut, err := SM4CryptCbc(bytKey, bytNewData, bytIv, 1)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	sOut := hex.EncodeToString(bytOut)
+	t.Log("密文:", sOut)
+
+	bytNewData, err = hex.DecodeString("F8624ABBAEA5E82FACE8FB2EDDB5F7D9")
+	if err != nil {
+		return
+	}
+
+	bytKey = []byte("NEWCAPECNEWCAPEC")
+	bytOut, err = SM4CryptCbc(bytKey, bytNewData, bytIv, 0)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	sOut = string(bytOut)
+	t.Log("明文:", sOut)
 }
 
 func Test_SM4PbocMac(t *testing.T) {
